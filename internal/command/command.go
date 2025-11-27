@@ -76,7 +76,7 @@ func runner(cmd *cobra.Command, args []string) error {
 var rootCmd = &cobra.Command{
 	Use:   "retry",
 	Short: "retry is a CLI tool for simple elegant and fast retrying of commands",
-	Long:  `A fast and simple CLI tool to convert between currencies using exchangerate.host.`,
+	Long:  `A fast and simple CLI tool to repeatedly execute a command until it succeeds or a specified number of attempts is reached. Supports configurable delays, per-command and overall timeouts, and verbose or quiet output modes.`,
 	RunE:  runner,
 }
 
