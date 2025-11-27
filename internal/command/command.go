@@ -44,7 +44,7 @@ func runner(cmd *cobra.Command, args []string) error {
 			fmt.Printf("Attempt %d/%d: %s %v\n", i, times, runCmd, runArgs)
 		}
 
-		c := exec.Command(runCmd, runArgs...)
+		c := exec.CommandContext(ctx, runCmd, runArgs...)
 		c.Stdout = os.Stdout
 		c.Stderr = os.Stderr
 		c.Stdin = os.Stdin
