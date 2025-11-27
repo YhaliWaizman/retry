@@ -39,11 +39,10 @@ func runner(cmd *cobra.Command, args []string) error {
 		} else {
 			ctx, cancel = context.WithCancel(context.Background())
 		}
-		defer cancel()
 		if verbose {
 			fmt.Printf("Attempt %d/%d: %s %v\n", i, times, runCmd, runArgs)
 		}
-
+		
 		c := exec.CommandContext(ctx, runCmd, runArgs...)
 		c.Stdout = os.Stdout
 		c.Stderr = os.Stderr
@@ -55,7 +54,7 @@ func runner(cmd *cobra.Command, args []string) error {
 			}
 			return nil
 		}
-
+		
 		if verbose {
 			fmt.Printf("[Failed] Attempt %d failed: %v\n", i, err)
 		}
@@ -68,6 +67,7 @@ func runner(cmd *cobra.Command, args []string) error {
 		if ctx.Err() == context.DeadlineExceeded {
 			fmt.Printf("Command timed out after %s\n", commandTimeout)
 		}		
+		defer cancel()
 	}
 
 	return fmt.Errorf("all attempts failed")
