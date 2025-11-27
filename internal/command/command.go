@@ -2,24 +2,60 @@ package command
 
 import (
 	"fmt"
-	"os"
+    "os"
+    "os/exec"
+    "strconv"
+    "time"
 
 	"github.com/spf13/cobra"
 )
 
-var apiKey string
+
+func runner(cmd *cobra.Command, args []string) error {
+
+	times, err := strconv.Atoi(args[0])
+	if err != nil || times < 1 {
+		return fmt.Errorf("invalid number of times: %s", args[0])
+	}
+
+	runCmd := args[1]
+	runArgs := args[2:]
+
+	for i := 1; i <= times; i++ {
+		fmt.Printf("Attempt %d/%d: %s %v\n", i, times, runCmd, runArgs)
+
+		c := exec.Command(runCmd, runArgs...)
+		c.Stdout = os.Stdout
+		c.Stderr = os.Stderr
+		c.Stdin = os.Stdin
+		err := c.Run()
+		if err == nil {
+            fmt.Printf("[Success] Command succeeded on attempt %d\n", i)
+            return nil
+        }
+		fmt.Printf("[Failed] Attempt %d failed: %v\n", i, err)
+        if i < times {
+            fmt.Printf("Retrying in %s...\n", 2*time.Second)
+            time.Sleep(2*time.Second)
+        }
+	}
+
+	return fmt.Errorf("all attempts failed")
+}
+
+
+
 
 var rootCmd = &cobra.Command{
 	Use:   "retry",
 	Short: "retry is a CLI tool for simple elegant and fast retrying of commands",
 	Long:  `A fast and simple CLI tool to convert between currencies using exchangerate.host.`,
+	RunE: runner,
 }
 
-func Execute(key string) {
-
-	apiKey = key
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+func Execute() {
+    if err := rootCmd.Execute(); err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
 }

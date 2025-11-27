@@ -1,11 +1,10 @@
 package main
 
 import (
-	"os"
 
-	"github.com/yhaliwaizman/retry.sh/internal/command"
+	"github.com/yhaliwaizman/retry/internal/command"
 )
 
 func main() {
-	command.Execute(apiKey)
+	command.Execute()
 }
