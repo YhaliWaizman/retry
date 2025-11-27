@@ -32,9 +32,9 @@ func runner(cmd *cobra.Command, args []string) error {
 		c.Stdin = os.Stdin
 		err := c.Run()
 		if err == nil {
-            fmt.Printf("[Success] Command succeeded on attempt %d\n", i)
-            return nil
-        }
+		fmt.Printf("[Success] Command succeeded on attempt %d\n", i)
+		return nil
+	}
 		fmt.Printf("[Failed] Attempt %d failed: %v\n", i, err)
         if i < times {
             fmt.Printf("Retrying in %v...\n", 2*time.Second)
