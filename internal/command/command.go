@@ -12,7 +12,9 @@ import (
 
 
 func runner(cmd *cobra.Command, args []string) error {
-
+	if len(args) < 2 {
+		return fmt.Errorf("usage: retry <times> <command> [args...]")
+	}
 	times, err := strconv.Atoi(args[0])
 	if err != nil || times < 1 {
 		return fmt.Errorf("invalid number of times: %s", args[0])
