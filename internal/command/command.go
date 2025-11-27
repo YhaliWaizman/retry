@@ -66,7 +66,7 @@ func runner(cmd *cobra.Command, args []string) error {
 			time.Sleep(delay)
 		}
 		if ctx.Err() == context.DeadlineExceeded {
-			fmt.Printf("Command timed out after %s\n", timeout)
+			fmt.Printf("Command timed out after %s\n", commandTimeout)
 		}		
 	}
 
