@@ -35,7 +35,7 @@ func runner(cmd *cobra.Command, args []string) error {
         }
 		fmt.Printf("[Failed] Attempt %d failed: %v\n", i, err)
         if i < times {
-            fmt.Printf("Retrying in %s...\n", 2*time.Second)
+            fmt.Printf("Retrying in %v...\n", 2*time.Second)
             time.Sleep(2*time.Second)
         }
 	}
