@@ -1,7 +1,81 @@
 ARTIFACT_NAME := retry
+BINARY_PATH := bin/$(ARTIFACT_NAME)
+GO_FILES := $(shell find . -name '*.go' -type f)
 
-build:
-	@go build -o bin/${ARTIFACT_NAME} cmd/${ARTIFACT_NAME}/main.go 
+.PHONY: build run test clean install lint help fmt vet check test-unit test-integration
 
+## build: Build the binary
+build: $(BINARY_PATH)
+
+$(BINARY_PATH): $(GO_FILES)
+	@echo "Building $(ARTIFACT_NAME)..."
+	@mkdir -p bin
+	@go build -o $(BINARY_PATH) cmd/$(ARTIFACT_NAME)/main.go
+	@echo "✓ Build complete: $(BINARY_PATH)"
+
+## run: Run the application with example arguments
 run:
-	@go run cmd/${ARTIFACT_NAME}/main.go 
+	@go run cmd/$(ARTIFACT_NAME)/main.go 3 echo "Hello, Retry!"
+
+## test: Run all tests
+test:
+	@echo "Running unit tests..."
+	@go test -v ./...
+	@echo ""
+	@echo "Running integration tests..."
+	@./tests/integration-tests.sh
+
+## test-unit: Run only unit tests
+test-unit:
+	@go test -v ./...
+
+## test-integration: Run only integration tests
+test-integration:
+	@./tests/integration-tests.sh
+
+## clean: Remove build artifacts
+clean:
+	@echo "Cleaning..."
+	@rm -rf bin/
+	@echo "✓ Clean complete"
+
+## install: Install binary to GOPATH/bin
+install: build
+	@echo "Installing to $(GOPATH)/bin..."
+	@cp $(BINARY_PATH) $(GOPATH)/bin/
+	@echo "✓ Installed to $(GOPATH)/bin/$(ARTIFACT_NAME)"
+
+## lint: Run linter (requires golangci-lint)
+lint:
+	@if command -v golangci-lint > /dev/null; then \
+		echo "Running linter..."; \
+		golangci-lint run; \
+	else \
+		echo "golangci-lint not found. Install with:"; \
+		echo "  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+		exit 1; \
+	fi
+
+## fmt: Format Go code
+fmt:
+	@echo "Formatting code..."
+	@go fmt ./...
+	@echo "✓ Code formatted"
+
+## vet: Run go vet
+vet:
+	@echo "Running go vet..."
+	@go vet ./...
+	@echo "✓ Vet complete"
+
+## check: Run all checks (fmt, vet, test)
+check: fmt vet test
+	@echo "✓ All checks passed"
+
+## help: Show this help message
+help:
+	@echo "Available targets:"
+	@sed -n 's/^##//p' Makefile | column -t -s ':' | sed -e 's/^/ /'
+
+.DEFAULT_GOAL := build
+ 
