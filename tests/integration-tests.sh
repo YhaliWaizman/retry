@@ -112,9 +112,14 @@ run_test 8 "Slow command with short timeout" 1 \
 run_test 9 "Timeout with verbose output" 1 \
     ./bin/retry -v --command-timeout 1s 2 sleep 5
 
+# Test 10: Overall timeout (should stop retrying after overall timeout)
+run_test 10 "Overall timeout" 1 \
+    ./bin/retry --overall-timeout 5s 10 sleep 3
+
+
 # Test 10: Real HTTP request (optional - needs internet)
 run_test 10 "Real HTTP request" 0 \
-    ./bin/retry 3 curl -s https://httpbin.org/status/200
+    ./bin/retry 3 -- curl -s https://httpbin.org/status/200
 
 # Test 11: Multiple retries with different delays
 run_test 11 "Multiple retries with 0.5s delay" 1 \
