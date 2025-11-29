@@ -72,4 +72,3 @@ check: fmt vet test
 	@echo "✓ All checks passed"
 
 .DEFAULT_GOAL := build
- 
