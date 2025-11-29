@@ -56,7 +56,7 @@ func (r *Runner) executeWithRetry(times int, command string, args []string) erro
 
     for attempt := 1; attempt <= times; attempt++ {
         ctx, cancel := r.createContext(r.config.CommandTimeout)
-		
+        
         r.logger.LogAttempt(attempt, times, command, args)
 		
         result := r.executor.Execute(ctx, command, args)
