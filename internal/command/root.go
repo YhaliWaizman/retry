@@ -47,6 +47,8 @@ func init() {
         "Timeout for each individual command execution (0 = no timeout)")
     rootCmd.Flags().BoolVarP(&cfg.Verbose, "verbose", "v", false,
         "Enable verbose logging")
+    rootCmd.Flags().StringVarP(&cfg.On, "on", "o", "",
+        "Retry on specific exit codes/strings (comma-separated)")
 }
 
 func Execute() {

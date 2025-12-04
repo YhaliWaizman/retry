@@ -68,7 +68,9 @@ vet:
 	@echo "✓ Vet complete"
 
 
-check: fmt vet test
-	@echo "✓ All checks passed"
-
+check: lint fmt vet
+	@echo "✓ All code structure checks passed"
+	
+full: check test 
+	@echo "✓ All checks and tests passed"
 .DEFAULT_GOAL := build

@@ -9,6 +9,7 @@ type Config struct {
     Quiet          bool
     Timeout        time.Duration
     CommandTimeout time.Duration
+    On             string
 }
 
 // NewConfig creates a new Config with default values
